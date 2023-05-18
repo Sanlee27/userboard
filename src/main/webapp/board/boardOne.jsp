@@ -264,15 +264,15 @@
 	</table>
 	
 	<!-- ================ 페이지 ================ -->
-	<div>
+	<div class="btn-group">
 		<!-- 첫 페이지 버튼 항상 표시 -->
-		<a href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=1&boardNo=<%=boardNo%>">첫페이지</a>&nbsp;
+		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=1&boardNo=<%=boardNo%>">첫페이지</a>&nbsp;
 	<%
 		// 첫페이지가 아닐 경우 이전 버튼 표시 == 첫 페이지에선 표시 x 
 		// 다음 pagePerPage의 첫행으로 넘기기 ex) pagePerPage=5(1~5) 중 4 페이지 에서 다음 버튼 누르면 6페이지 첫행으로
 		if(minPage > 1){
 	%>
-			<a href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=minPage-rowPerPage%>&boardNo=<%=boardNo%>">이전</a>&nbsp;
+			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=minPage-rowPerPage%>&boardNo=<%=boardNo%>">이전</a>&nbsp;
 	<%	
 		}
 		
@@ -281,11 +281,11 @@
 		for(int i = minPage; i<=maxPage; i++){
 			if(i == currentPage){
 	%>
-				<span><%=i%></span>
+				<span class="btn btn-secondary"><%=i%></span>
 	<%	
 			} else {
 	%>
-				<a href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=i%>&boardNo=<%=boardNo%>"><%=i%></a>&nbsp;
+				<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=i%>&boardNo=<%=boardNo%>"><%=i%></a>&nbsp;
 	<%			
 			}
 		}
@@ -294,12 +294,12 @@
 		// 이전 pagePerPage의 첫행으로 넘기기 ex) pagePerPage=5(21~25) 중 23 페이지 에서 이전 버튼 누르면 16페이지 첫행으로
 		if(maxPage != lastPage){
 	%>
-			<a href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=minPage+rowPerPage%>&boardNo=<%=boardNo%>">다음</a>&nbsp;
+			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=minPage+rowPerPage%>&boardNo=<%=boardNo%>">다음</a>&nbsp;
 	<%
 		}
 	%>	
 		<!-- 마지막 페이지 버튼 항상 표시 -->
-		<a href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=lastPage%>&boardNo=<%=boardNo%>">마지막페이지</a>&nbsp;
+		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=lastPage%>&boardNo=<%=boardNo%>">마지막페이지</a>&nbsp;
 	</div>
 	<br>
 	<div>
