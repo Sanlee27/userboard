@@ -26,6 +26,8 @@
 	// 유형 검사없이 원시 유형을 매개 변수화 된 유형으로 캐스팅 할 때 [Unchecked Cast] 경고 표시
 	@SuppressWarnings("unchecked")
 	ArrayList<String> localList = (ArrayList<String>)session.getAttribute("localList");
+	
+	System.out.println(localList + " : localList");
 %>    
 <!DOCTYPE html>
 <html>

@@ -5,7 +5,7 @@
 <%@page import="java.net.*"%>
 <%@ page import = "vo.*"%> 
 <%
-	response.setCharacterEncoding("utf-8");
+	response.setCharacterEncoding("UFT-8");
 	
 	//유효성 검사
 	if(session.getAttribute("loginMemberId") == null){ // 로그인전

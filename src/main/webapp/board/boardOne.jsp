@@ -298,8 +298,19 @@
 	<%
 		}
 	%>	
-		<!-- 마지막 페이지 버튼 항상 표시 -->
+		<!-- 마지막 페이지 버튼 -->
+	<%
+		// 댓글 없어 활성화된 페이지가 없으면 현재 페이지(1p) 고정
+		if(lastPage == 0){
+	%>
+			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=1&boardNo=<%=boardNo%>">마지막페이지</a>&nbsp;
+	<%
+		} else {
+	%>
 		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/board/boardOne.jsp?currentPage=<%=lastPage%>&boardNo=<%=boardNo%>">마지막페이지</a>&nbsp;
+	<%
+		}
+	%>	
 	</div>
 	<br>
 	<div>

@@ -185,52 +185,6 @@
 	System.out.println(boardList.size());
 	
 	System.out.println(currentPage);
-	
-	/* // ================== 페이지 ===================
-	int totalRow = 0; 
-	String totalRowSql = null;
-	PreparedStatement totalRowStmt = null;
-	ResultSet totalRowRs = null; 
-	
-	if(localName.equals("전체")){
-		totalRowSql = "SELECT COUNT(*) FROM board";
-		totalRowStmt = conn.prepareStatement(totalRowSql);
-	} else{
-		totalRowSql = "SELECT COUNT(*) FROM board WHERE local_name=?";
-		totalRowStmt = conn.prepareStatement(totalRowSql);
-		totalRowStmt.setString(1, localName);
-	}
-	System.out.println(totalRowStmt + " : home.jsp totalRowStmt");
-	
-	totalRowRs = totalRowStmt.executeQuery();
-	
-	// 총 행의 수
-	if(totalRowRs.next()){
-		totalRow = totalRowRs.getInt("COUNT(*)");
-	}
-	System.out.println(totalRow + " : home.jsp totalRow");
-	
-	int endRow = startRow + (rowPerPage - 1);
-	if(endRow > totalRow){
-		endRow = totalRow;
-	}
-	
-	// 마지막 페이지
-	int pagePerPage = 10;
-	int lastPage = totalRow / rowPerPage; 
-	
-	// 총 행의 수_페이지 당 행의 수 의 나머지가 0이 아니면 마지막 페이지 + 1
-	if(totalRow % rowPerPage != 0){
-		lastPage = lastPage + 1;
-	}
-	
-	int minPage = ((currentPage - 1) / pagePerPage * pagePerPage) + 1 ;
-	int maxPage = minPage + (pagePerPage - 1);
-	if(maxPage > lastPage){
-		maxPage = lastPage;
-	}
-	
-	System.out.println(lastPage + " : home.jsp lastPage"); */
 %>
 <!DOCTYPE html>
 <html>
@@ -251,8 +205,10 @@
 	<!-- 메인메뉴(가로) -->
 	<div>
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
-		<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/selectLocal.jsp">카테고리 목록</a>
-		<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/insertBoardOneForm.jsp">게시글 작성</a>
+		<div>
+			<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/selectLocal.jsp">카테고리 목록</a>
+			<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/insertBoardOneForm.jsp">게시글 작성</a>
+		</div>
 	</div>
 	<br>	
 	
@@ -280,14 +236,14 @@
 		%>
 	</div>
 	<br>
-	<div>
+	<div class="row">
 		<!-- 서브메뉴(세로) subMenuList 모델을 출력 -->
-		<div>
-			<ul>
+		<div class="col-sm-1">
+			<ul class="list-group">
 			<% 
 				for(HashMap<String, Object> m : subMenuList){
 			%>
-					<li>
+					<li class="list-group-item list-group-item-action list-group-item-light">
 						<a href = "<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>">
 							<%=(String)m.get("localName")%>(<%=(Integer)(m.get("cnt"))%>)
 						</a>
@@ -299,7 +255,7 @@
 		</div>
 		
 		<!-- ================ 리스트 ================ --> <!-- css 확인 -->
-		<div>
+		<div class="col-sm-11">
 			<table class="table table-hover">
 				<tr>
 					<th>지역명</th>
@@ -360,8 +316,19 @@
 	<%
 		}
 	%>
-		<!-- 마지막 페이지 버튼 항상 표시 -->	
-		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=lastPage%>&localName=<%=localName%>">마지막페이지</a>&nbsp;
+		<!-- 마지막 페이지 버튼 -->	
+	<%
+		// 게시물이 없어 활성화된 페이지가 없으면 현재 페이지(1p) 고정
+		if(lastPage == 0){
+	%>
+			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=1&localName=<%=localName%>">마지막페이지</a>&nbsp;
+	<%
+		} else {
+	%>
+			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=lastPage%>&localName=<%=localName%>">마지막페이지</a>&nbsp;
+	<%
+		}
+	%>		
 	</div>
 	<br>
 	<div>
