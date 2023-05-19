@@ -154,12 +154,12 @@
 
 	String boardSql = "";
 	if(localName.equals("전체")){
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board ORDER BY createdate DESC LIMIT ?,?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, member_id memberId, createdate FROM board ORDER BY createdate DESC LIMIT ?,?";
 		boardStmt = conn. prepareStatement(boardSql);
 		boardStmt.setInt(1,startRow);
 		boardStmt.setInt(2,rowPerPage);
 	} else {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?,?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, member_id memberId, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?,?";
 		boardStmt = conn. prepareStatement(boardSql);
 		boardStmt.setString(1,localName);
 		boardStmt.setInt(2,startRow);
@@ -177,6 +177,7 @@
 		b.setBoardNo(boardRs.getInt("boardNo"));
 		b.setLocalName(boardRs.getString("localName"));
 		b.setBoardTitle(boardRs.getString("boardTitle"));
+		b.setMemberId(boardRs.getString("memberId"));
 		b.setCreatedate(boardRs.getString("createdate"));
 		boardList.add(b);
 	}
@@ -185,6 +186,12 @@
 	System.out.println(boardList.size());
 	
 	System.out.println(currentPage);
+	
+	// 메세지 추가
+	String msg = null;
+	if(request.getParameter("msg") != null){
+		msg = request.getParameter("msg");
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -259,14 +266,16 @@
 			<table class="table table-hover">
 				<tr>
 					<th>지역명</th>
+					<th>작성자</th>
 					<th>글 제목</th>
-					<th>생성일자</th>
+					<th>작성일자</th>
 				</tr>
 				<%
 					for(Board b : boardList){
 				%>
 						<tr>
 							<td><%=b.getLocalName()%></td>
+							<td><%=b.getMemberId()%></td>
 							<td>
 								<a href = "<%=request.getContextPath()%>/board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>">
 									<%=b.getBoardTitle()%>

@@ -112,9 +112,7 @@
 					<tr>
 						<th>내용</th>
 						<td>
-							<textarea rows="3" cols="80" name="boardContent">
-								<%=board.getBoardContent()%>
-							</textarea>
+							<textarea rows="3" cols="80" name="boardContent"><%=board.getBoardContent()%></textarea>
 						</td>
 					</tr>
 					<tr>
