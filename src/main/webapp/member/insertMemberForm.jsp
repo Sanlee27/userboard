@@ -19,10 +19,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-	<div>
-		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
-	</div>
-	<br>
 	<%
 		// 세션 유효성 검사
 		if(loginMemberId != null){
@@ -54,6 +50,7 @@
 			</tr>
 		</table>
 		<button type="submit" class="btn btn-outline-secondary">가입</button>
+		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp">홈으로</a>
 	</form>
 	<br>
 	<div>

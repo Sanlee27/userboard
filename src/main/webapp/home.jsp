@@ -203,49 +203,58 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+	<div class="p-4 bg-dark text-white text-center">
+	  <h1>유저게시판</h1>
+	  <p>
+	  	UserBoard_게시판작성<br>
+	  	기간 : 23.05.02 - 23.05.20 / 	인원 : 1명<br>
+	  	개발환경 : Tool_Eclipse/HeidiSQL DB_MariaDB(3.1.3) WAS_Tomcat (10.1.7 > 9.0.75)<br> 
+	  	개발(구현) 내용 : 페이지별, 10단위 이동 / 로그인, 회원가입 / 지역(카테고리)목록, 게시물 및 댓글 목록 / 목록 별 작성, 수정, 삭제
+	  </p> 
+	</div>
 	<%
-			// request.getRequestDispatcher(request.getContextPath()+"/inc/mainmenu.jsp").include(request, response);
-			// ↑ 이걸 액션태그로 변경하면 아래와 같다
+		// request.getRequestDispatcher(request.getContextPath()+"/inc/mainmenu.jsp").include(request, response);
+		// ↑ 이걸 액션태그로 변경하면 아래와 같다
 	%>
 	<!-- 메인메뉴(가로) -->
 	<div>
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	<br>	
-	
-	<div>
-		<!-- home 내용 : 로그인 폼 -->
-		<!-- 로그인 폼 -->
-		<%
-			if(session.getAttribute("loginMemberId") == null){// 로그인 전이면 로그인 폼 출력
-		%>
-				<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
-					<table class="table table-hover">
-						<tr>
-							<td>아이디</td>
-							<td><input type="text" name="memberId"></td>
-						</tr>	
-						<tr>
-							<td>패스워드</td>
-							<td><input type="password" name="memberPw"></td>
-						</tr>	
-					</table>
-					<button type="submit" class="btn btn-outline-secondary">로그인</button>
-				</form>	
-		<%
-			}
-		%>
-	</div>
+	<!-- 로그인폼 메인메뉴에 병합 -->
+		<%-- <div>
+			<!-- home 내용 : 로그인 폼 -->
+			<!-- 로그인 폼 -->
+			<%
+				if(session.getAttribute("loginMemberId") == null){// 로그인 전이면 로그인 폼 출력
+			%>
+					<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
+						<table class="table table-hover">
+							<tr>
+								<td>아이디</td>
+								<td><input type="text" name="memberId"></td>
+							</tr>	
+							<tr>
+								<td>패스워드</td>
+								<td><input type="password" name="memberPw"></td>
+							</tr>	
+						</table>
+						<button type="submit" class="btn btn-outline-secondary">로그인</button>
+					</form>	
+			<%
+				}
+			%>
+		</div> --%>
 	<br>
 	<div class="row">
 		<!-- 서브메뉴(세로) subMenuList 모델을 출력 -->
-		<div class="col-sm-1">
-			<ul class="list-group">
+		<div class="col-sm-2">
+			<ul class="list-group list-group-flush">
 			<%
 					for(HashMap<String, Object> m : subMenuList){
 			%>
-					<li class="list-group-item list-group-item-action list-group-item-light">
-						<a href = "<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>">
+					<li style="text-align: center;" class="list-group-item">
+						<a href = "<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" class="text-decoration-none">
 							<%=(String)m.get("localName")%>(<%=(Integer)(m.get("cnt"))%>)
 						</a>
 					</li>
@@ -256,7 +265,7 @@
 		</div>
 		
 		<!-- ================ 리스트 ================ --> <!-- css 확인 -->
-		<div class="col-sm-11">
+		<div class="col-sm-10">
 			<table class="table table-hover">
 				<tr>
 					<th>지역명</th>
@@ -271,7 +280,7 @@
 							<td><%=b.getLocalName()%></td>
 							<td><%=b.getMemberId()%></td>
 							<td>
-								<a href = "<%=request.getContextPath()%>/board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>">
+								<a href = "<%=request.getContextPath()%>/board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" class="text-decoration-none">
 									<%=b.getBoardTitle()%>
 								</a>
 							</td>
