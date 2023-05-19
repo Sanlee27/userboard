@@ -5,6 +5,8 @@
 <%@ page import = "java.net.*"%>
 <%@ page import = "vo.*"%>     
 <%
+	request.setCharacterEncoding("UTF-8");	
+	
 	//다른 페이지에서 넘어온 메시지 있으면 저장
 	String msg = "";
 	if(request.getParameter("msg") != null){
@@ -22,12 +24,37 @@
 	
 	System.out.println(loginMemberId + "insertBoardOneForm loginMemberId");
 	
-	//세션에 저장된 localList불러옴
-	// 유형 검사없이 원시 유형을 매개 변수화 된 유형으로 캐스팅 할 때 [Unchecked Cast] 경고 표시
-	@SuppressWarnings("unchecked")
-	ArrayList<String> localList = (ArrayList<String>)session.getAttribute("localList");
+	//지역선택_저장된 지역만 선택할수있게,,
+	// DB
+	String driver = "org.mariadb.jdbc.Driver";
+	String dburl = "jdbc:mariadb://127.0.0.1:3306/userboard";
+	String dbuser = "root";
+	String dbpw = "java1234";
+	
+	Class.forName(driver);
+	Connection conn = null;
+	
+	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
+	
+	// 쿼리
+	PreparedStatement localStmt = null;
+	ResultSet localRs = null;
+	String localSql = "SELECT local_name localName FROM local";
+	localStmt = conn.prepareStatement(localSql);
+	
+	System.out.println(localStmt + " : insertBoardOneForm localStmt");
+	
+	localRs = localStmt.executeQuery();
+	
+	ArrayList<Local> localList = new ArrayList<Local>();
+	while(localRs.next()){
+		Local l = new Local();
+		l.setLocalName(localRs.getString("localName"));
+		localList.add(l);
+	}
 	
 	System.out.println(localList + " : localList");
+	
 %>    
 <!DOCTYPE html>
 <html>
@@ -51,10 +78,10 @@
 					<select name="localName">
 							<option value="">지역선택</option>
 						<%
-							for(String local : localList){
+							for(Local l : localList){
 						%>
 							<option>
-								<%=local%>
+								<%=l.getLocalName()%>
 							</option>
 						<%
 							}

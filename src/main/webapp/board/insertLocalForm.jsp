@@ -4,6 +4,8 @@
 <%@ page import = "java.util.*"%>
 <%@ page import = "vo.*"%> 
 <%
+	request.setCharacterEncoding("UTF-8");	
+
 	//세션 유효성 검사_ 로그인 전이면
 	if(session.getAttribute("loginMemberId") == null){
 		response.sendRedirect(request.getContextPath()+"/home.jsp");

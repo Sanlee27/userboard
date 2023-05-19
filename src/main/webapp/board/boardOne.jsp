@@ -89,7 +89,7 @@
 	}
 	System.out.println(totalRow + " : boardOne totalRow");
 	
-	// 시작행 = ((현재 페이지 - 1) x 페이지당 개수 5개) + 1 ex) 2페이지 > 6번 행~ 10번 행
+	// 시작행 = ((현재 페이지 - 1) x 페이지당 개수 5개)
 	int startRow = (currentPage-1) * rowPerPage;
 	
 	// 마지막행 = 시작행 + (페이지당 개수 5개 - 1 = 4);
@@ -150,7 +150,6 @@
 	if(request.getParameter("msg") != null){
 		msg = request.getParameter("msg");
 	}
-	
 %>
 <!DOCTYPE html>
 <html>

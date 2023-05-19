@@ -5,59 +5,59 @@
 <%@ page import="java.net.*" %>
 <%@ page import = "vo.*"%>    
 <%
-	response.setCharacterEncoding("utf-8");
-	
-	//유효성 검사
-	if(session.getAttribute("loginMemberId") == null){ // 로그인전
-		response.sendRedirect(request.getContextPath()+"/home.jsp");
-		return;		
-	}
+    response.setCharacterEncoding("utf-8");
+    	
+    	//유효성 검사
+    	if(session.getAttribute("loginMemberId") == null){ // 로그인전
+    		response.sendRedirect(request.getContextPath()+"/home.jsp");
+    		return;		
+    	}
 
-	String loginMemberId = (String)session.getAttribute("loginMemberId");
-	int boardNo = Integer.parseInt(request.getParameter("boardNo"));
-	
-	System.out.println(loginMemberId + " : deleteBoardOneForm loginMemeberId");
-	System.out.println(boardNo + " : deleteBoardOneForm boardNo");
-	
-	//DB
-	String driver = "org.mariadb.jdbc.Driver";
-	String dburl = "jdbc:mariadb://127.0.0.1:3306/userboard";
-	String dbuser = "root";
-	String dbpw = "java1234";
-	
-	Class.forName(driver);
-	Connection conn = null;
-	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
-	
-	PreparedStatement boardStmt = null;
-	ResultSet boardRs = null;
-	
-	String boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, board_content boardContent, member_id memberId, createdate, updatedate FROM board WHERE board_no = ?";
-	boardStmt = conn.prepareStatement(boardSql);
-	boardStmt.setInt(1, boardNo);
-	
-	boardRs = boardStmt.executeQuery();
-	
-	System.out.println(boardStmt + " : deleteBoardOneForm boardStmt");
-	
-	Comment comment = null;
-	Board board = null;
-	if(boardRs.next()){
-		board = new Board();
-		board.setBoardNo(boardRs.getInt("boardNo"));
-		board.setLocalName(boardRs.getString("localName"));
-		board.setBoardTitle(boardRs.getString("boardTitle"));
-		board.setBoardContent(boardRs.getString("boardContent"));
-		board.setMemberId(boardRs.getString("memberId"));
-		board.setCreatedate(boardRs.getString("createdate"));
-		board.setUpdatedate(boardRs.getString("updatedate"));
-	}
-	
-	String msg = null;
-	if(request.getParameter("msg") != null){
-		msg = request.getParameter("msg");
-	}
-%> 
+    	String loginMemberId = (String)session.getAttribute("loginMemberId");
+    	int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+    	
+    	System.out.println(loginMemberId + " : deleteBoardOneForm loginMemeberId");
+    	System.out.println(boardNo + " : deleteBoardOneForm boardNo");
+    	
+    	//DB
+    	String driver = "org.mariadb.jdbc.Driver";
+    	String dburl = "jdbc:mariadb://127.0.0.1:3306/userboard";
+    	String dbuser = "root";
+    	String dbpw = "java1234";
+    	
+    	Class.forName(driver);
+    	Connection conn = null;
+    	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
+    	
+    	PreparedStatement boardStmt = null;
+    	ResultSet boardRs = null;
+    	
+    	String boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, board_content boardContent, member_id memberId, createdate, updatedate FROM board WHERE board_no = ?";
+    	boardStmt = conn.prepareStatement(boardSql);
+    	boardStmt.setInt(1, boardNo);
+    	
+    	boardRs = boardStmt.executeQuery();
+    	
+    	System.out.println(boardStmt + " : deleteBoardOneForm boardStmt");
+    	
+    	Comment comment = null;
+    	Board board = null;
+    	if(boardRs.next()){
+    		board = new Board();
+    		board.setBoardNo(boardRs.getInt("boardNo"));
+    		board.setLocalName(boardRs.getString("localName"));
+    		board.setBoardTitle(boardRs.getString("boardTitle"));
+    		board.setBoardContent(boardRs.getString("boardContent"));
+    		board.setMemberId(boardRs.getString("memberId"));
+    		board.setCreatedate(boardRs.getString("createdate"));
+    		board.setUpdatedate(boardRs.getString("updatedate"));
+    	}
+    	
+    	String msg = null;
+    	if(request.getParameter("msg") != null){
+    		msg = request.getParameter("msg");
+    	}
+    %> 
 <!DOCTYPE html>
 <html>
 <head>

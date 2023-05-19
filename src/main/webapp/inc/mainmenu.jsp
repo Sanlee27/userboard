@@ -17,6 +17,8 @@
 		 %>
 				<li class="list-group-item"><a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/member/memberInformation.jsp">회원정보</a></li>
 				<li class="list-group-item"><a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a></li>
+				<li class="list-group-item"><a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/selectLocal.jsp">카테고리 목록</a></li>
+				<li class="list-group-item"><a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/insertBoardOneForm.jsp">게시글 작성</a></li>
 		<%
 		 	}
 		%> 

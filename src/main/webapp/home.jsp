@@ -1,3 +1,5 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.awt.dnd.DragGestureListener"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
@@ -18,7 +20,7 @@
 	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
 	
 	// ==================================================
-			
+	
 	/* 1. 요청분석(컨트롤러 계층)
 		1.1 session JSP내장(기본)객체
 		1.2 request / response
@@ -67,8 +69,8 @@
 	}
 	System.out.println(totalRow + " : home.jsp totalRow");
 	
-	// 시작행 = ((현재 페이지 - 1) x 페이지당 개수 10개) + 1 ex) 2페이지 > 11번 행~ 20번 행
-	int startRow = (currentPage-1) * rowPerPage + 1;
+	// 시작행 = ((현재 페이지 - 1) x 페이지당 개수 10개) ex) 1페이지 > 0~9번 행
+	int startRow = (currentPage-1) * rowPerPage;
 	
 	// 마지막행 = 시작행 + (페이지당 개수 10개 - 1 = 9);
 	int endRow = startRow + (rowPerPage - 1);
@@ -98,7 +100,7 @@
 	
 	
 	// ==================================================
-			
+	
 	/*  SELECT '전체' localName, COUNT(local_name) cnt FROM board
 	UNION ALL
 	SELECT local_name, COUNT(local_name) FROM board GROUP BY local_name; 
@@ -108,7 +110,11 @@
 	PreparedStatement subMenuStmt = null;
 	ResultSet subMenuRs = null;
 	
-	String subMenuSql = "SELECT '전체' localName, COUNT(local_name) cnt FROM board UNION ALL SELECT local_name, COUNT(local_name) FROM board GROUP BY local_name";
+	// 1쿼리 union all 2쿼리 union all 3쿼리
+	// 1쿼리 = local_name이 전체인 게시물 수 == 전체 게시물 수를 board에서 뽑아옴
+	// 2쿼리 = 각 local_name에 해당하면 지역명과 게시물수를 board에서 뽑아옴
+	// 3쿼리 = 게시물이 없는 local_name을 local에서 뽑아옴 
+	String subMenuSql = "SELECT '전체' localName, COUNT(local_name) cnt FROM board UNION ALL SELECT local_name, COUNT(local_name) FROM board GROUP BY local_name UNION ALL SELECT local_name, 0 FROM local WHERE local_name != All(SELECT local_name FROM board GROUP BY local_name)";
 	subMenuStmt = conn.prepareStatement(subMenuSql);
 	
 	System.out.println(subMenuStmt + " : home.jsp subMenuStmt");
@@ -129,12 +135,9 @@
 	for(HashMap<String, Object> m : subMenuList){
 		String currLocal = (String)m.get("localName");
 		if(!currLocal.equals("전체")){
-			localList.add(currLocal);
+	localList.add(currLocal);
 		}
 	}
-	
-	//지역이름 세션에 저장
-	session.setAttribute("localList", localList);
 	
 	// 게시판 목록 결과셋(모델)
 	PreparedStatement boardStmt = null;
@@ -187,11 +190,6 @@
 	
 	System.out.println(currentPage);
 	
-	// 메세지 추가
-	String msg = null;
-	if(request.getParameter("msg") != null){
-		msg = request.getParameter("msg");
-	}
 %>
 <!DOCTYPE html>
 <html>
@@ -206,16 +204,12 @@
 </head>
 <body>
 	<%
-		// request.getRequestDispatcher(request.getContextPath()+"/inc/mainmenu.jsp").include(request, response);
-		// ↑ 이걸 액션태그로 변경하면 아래와 같다 
+			// request.getRequestDispatcher(request.getContextPath()+"/inc/mainmenu.jsp").include(request, response);
+			// ↑ 이걸 액션태그로 변경하면 아래와 같다
 	%>
 	<!-- 메인메뉴(가로) -->
 	<div>
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
-		<div>
-			<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/selectLocal.jsp">카테고리 목록</a>
-			<a type="button" class="btn btn-outline-secondary" href = "<%=request.getContextPath()%>/board/insertBoardOneForm.jsp">게시글 작성</a>
-		</div>
 	</div>
 	<br>	
 	
@@ -223,7 +217,7 @@
 		<!-- home 내용 : 로그인 폼 -->
 		<!-- 로그인 폼 -->
 		<%
-			if(session.getAttribute("loginMemberId") == null){ // 로그인 전이면 로그인 폼 출력
+			if(session.getAttribute("loginMemberId") == null){// 로그인 전이면 로그인 폼 출력
 		%>
 				<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
 					<table class="table table-hover">
@@ -247,16 +241,16 @@
 		<!-- 서브메뉴(세로) subMenuList 모델을 출력 -->
 		<div class="col-sm-1">
 			<ul class="list-group">
-			<% 
-				for(HashMap<String, Object> m : subMenuList){
+			<%
+					for(HashMap<String, Object> m : subMenuList){
 			%>
 					<li class="list-group-item list-group-item-action list-group-item-light">
 						<a href = "<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>">
 							<%=(String)m.get("localName")%>(<%=(Integer)(m.get("cnt"))%>)
 						</a>
 					</li>
-			<%		
-				}
+			<%
+					}
 			%>
 			</ul>
 		</div>
@@ -271,7 +265,7 @@
 					<th>작성일자</th>
 				</tr>
 				<%
-					for(Board b : boardList){
+							for(Board b : boardList){
 				%>
 						<tr>
 							<td><%=b.getLocalName()%></td>
@@ -291,15 +285,20 @@
 	</div>
 	
 	<!-- ================ 페이지 ================ -->
-	<div class="btn-group">
+	<div class="container mt-3">
+		<ul class="pagination justify-content-center">
 		<!-- 첫 페이지 버튼 항상 표시 -->
+		<li>
 		<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=1&localName=<%=localName%>">첫페이지</a>&nbsp;
+		</li>
 	<%
 		// 첫페이지가 아닐 경우 이전 버튼 표시 == 첫 페이지에선 표시 x 
 		// 다음 pagePerPage의 첫행으로 넘기기 ex) pagePerPage=10(1~10) 중 4 페이지 에서 다음 버튼 누르면 11페이지 첫행으로 
 		if(minPage > 1){
-	%>
+	%>		
+			<li>
 			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=minPage-rowPerPage%>&localName=<%=localName%>">이전</a>&nbsp;
+			</li>
 	<%	
 		}
 		
@@ -308,11 +307,15 @@
 		for(int i = minPage; i<=maxPage; i++){
 			if(i == currentPage){
 	%>
+				<li>
 				<a class="btn btn-secondary"><%=i%></a>
+				</li>
 	<%	
 			} else {
-	%>
+	%>			
+				<li>
 				<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=i%>&localName=<%=localName%>"><%=i%></a>&nbsp;
+				</li>
 	<%			
 			}
 		}
@@ -320,8 +323,10 @@
 		// 각 페이지 표시버튼이 마지막이 아닌 경우 다음 버튼 표시 == 마지막 페이지에선 표시x
 		// 이전 pagePerPage의 첫행으로 넘기기 ex) pagePerPage=10(31~40) 중 37 페이지 에서 이전 버튼 누르면 21페이지 첫행으로
 		if(maxPage != lastPage){
-	%>
+	%>	
+			<li>
 			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=minPage+rowPerPage%>&localName=<%=localName%>">다음</a>&nbsp;
+			</li>
 	<%
 		}
 	%>
@@ -330,14 +335,19 @@
 		// 게시물이 없어 활성화된 페이지가 없으면 현재 페이지(1p) 고정
 		if(lastPage == 0){
 	%>
+			<li>
 			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=1&localName=<%=localName%>">마지막페이지</a>&nbsp;
+			</li>
 	<%
 		} else {
-	%>
+	%>	
+			<li>
 			<a type="button" class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=lastPage%>&localName=<%=localName%>">마지막페이지</a>&nbsp;
+			</li>
 	<%
 		}
 	%>		
+		</ul>
 	</div>
 	<br>
 	<div>

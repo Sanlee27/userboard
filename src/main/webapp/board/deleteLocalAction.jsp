@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "java.sql.*"%>
 <%@ page import = "java.util.*"%>
-<%@page import="java.net.*"%>
+<%@ page import="java.net.*"%>
 <%@ page import = "vo.*"%> 
 <%
-	response.setCharacterEncoding("UFT-8");
+	request.setCharacterEncoding("UTF-8");
+	System.out.println(request.getParameter("localName") + " : request.getParameter localName");
 	
 	//유효성 검사
 	if(session.getAttribute("loginMemberId") == null){ // 로그인전
@@ -27,7 +27,7 @@
 	}
 	
 	String localName = request.getParameter("localName");
-	System.out.println(localName + " : localName");
+	System.out.println(localName + " : deleteLocalAction localName");
 	
 	// DB
 	String driver = "org.mariadb.jdbc.Driver";
@@ -48,7 +48,7 @@
 	checkLocalStmt = conn.prepareStatement(checkLocalSql);
 	checkLocalStmt.setString(1, localName);
 	
-	System.out.println(checkLocalStmt + " : deleteLocalForm checkLocalStmt");
+	System.out.println(checkLocalStmt + " : deleteLocalAction checkLocalStmt");
 	
 	checkLocalRs = checkLocalStmt.executeQuery();
 	

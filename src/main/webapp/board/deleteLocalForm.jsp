@@ -26,7 +26,7 @@
 	}
 	
 	String localName = request.getParameter("localName");
-	System.out.println(localName + " : localName");
+	System.out.println(localName + " : deleteLocalForm localName");
 %>    
 <!DOCTYPE html>
 <html>

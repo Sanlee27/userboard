@@ -3,6 +3,8 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.net.*" %> 
 <%
+	request.setCharacterEncoding("UTF-8");	
+
 	//요청값 유효성 검사
 	String msg = null;
 
